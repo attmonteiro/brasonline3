@@ -1,0 +1,39 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function hasActiveSubscription() {
+      return isAuthenticated() && 
+        exists(/databases/$(database)/documents/subscriptions/$(request.auth.uid)) &&
+        get(/databases/$(database)/documents/subscriptions/$(request.auth.uid)).data.status == 'active';
+    }
+
+    match /products/{productId} {
+      allow read: if true;
+      allow create, update, delete: if isAuthenticated();
+    }
+
+    match /stores/{storeId} {
+      allow read: if isAuthenticated() && (
+        hasActiveSubscription() || 
+        (resource != null && (resource.data.ownerUid == request.auth.uid || resource.data.ownerId == request.auth.uid)) ||
+        storeId == request.auth.uid
+      );
+      allow create, update: if isAuthenticated();
+      allow delete: if isAuthenticated() && (resource != null && resource.data.ownerUid == request.auth.uid);
+    }
+
+    match /subscriptions/{subscriptionId} {
+      allow read: if isAuthenticated();
+      allow write, create, update: if isAuthenticated() && (
+        request.auth.uid == subscriptionId || 
+        (resource != null && resource.data.userId == request.auth.uid) ||
+        request.resource.data.userId == request.auth.uid
+      );
+    }
+  }
+}

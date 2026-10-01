@@ -1,0 +1,136 @@
+@import "tailwindcss";
+
+@layer base {
+  body {
+    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    color: #4A5568;
+    background-color: #FFFFFF;
+    line-height: 1.35;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    color: #14284B;
+  }
+}
+
+/* Bras Online Palette:
+   - Branco #FFFFFF
+   - Azul marinho #14284B (principal)
+   - Azul médio #2E5C94 (secundária/apoio/ícones)
+   - Vermelho #C4372B (destaque/ação/botões)
+   - Cinza claro #E8E8E8 (bordas/divisórias)
+*/
+.bg-navy-main {
+  background-color: #14284B;
+}
+.text-navy-main {
+  color: #14284B;
+}
+.border-navy-main {
+  border-color: #14284B;
+}
+
+.bg-blue-medium {
+  background-color: #2E5C94;
+}
+.text-blue-medium {
+  color: #2E5C94;
+}
+.border-blue-medium {
+  border-color: #2E5C94;
+}
+
+.bg-red-action {
+  background-color: #C4372B;
+}
+.text-red-action {
+  color: #C4372B;
+}
+.border-red-action {
+  border-color: #C4372B;
+}
+
+/* Legacy alias mappings to avoid broken styles */
+.bg-coral-cta {
+  background-color: #C4372B;
+}
+.text-coral-cta {
+  color: #C4372B;
+}
+.border-coral-cta {
+  border-color: #C4372B;
+}
+
+.bg-pink-soft {
+  background-color: #F8FAFC;
+}
+
+.text-gray-body {
+  color: #4A5568;
+}
+
+/* Compact Scrollbar for Horizontal Sliders */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Custom Voucher Ticket Serrated / Notched Border */
+.voucher-ticket {
+  position: relative;
+  background: #FFFFFF;
+}
+.voucher-ticket::before,
+.voucher-ticket::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: 12px;
+  height: 12px;
+  background-color: #FFFFFF;
+  border-radius: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+}
+.voucher-ticket::before {
+  left: -6px;
+}
+.voucher-ticket::after {
+  right: -6px;
+}
+
+/* Pulsing / Blinking colon for countdown */
+@keyframes blinkColon {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.25; }
+}
+
+.animate-blink {
+  animation: blinkColon 1s infinite;
+}
+
+/* Product Card Hover Lift */
+.shopee-card {
+  transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.15s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.15s;
+}
+.shopee-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 14px rgba(20, 40, 75, 0.1);
+  border-color: #2E5C94 !important;
+}
+
+/* Shimmer Loading Animation */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.shimmer {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}

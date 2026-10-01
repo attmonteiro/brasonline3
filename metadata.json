@@ -1,0 +1,6 @@
+{
+  "name": "Brás Online",
+  "description": "Central de fabricantes conectando lojistas atacadistas a confecções em todo o Brasil. Catálogo completo de atacado com contatos diretos de fornecedores.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

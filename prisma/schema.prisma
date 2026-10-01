@@ -1,0 +1,123 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum TipoUsuario {
+  comprador
+  vendedor
+  admin
+}
+
+enum StatusAssinatura {
+  ativa
+  inativa
+  cancelada
+  atrasada
+}
+
+model Usuario {
+  id              String            @id @default(uuid())
+  tipo            TipoUsuario       @default(comprador)
+  nome            String
+  email           String            @unique
+  senha_hash      String
+  telefone        String?
+  cidade          String?
+  estado          String?
+  cep             String?
+  criado_em       DateTime          @default(now())
+  atualizado_em   DateTime          @updatedAt
+
+  assinaturas     Assinatura[]
+  lojas           Loja[]
+  enderecos       EnderecoComprador[]
+
+  @@map("usuarios")
+}
+
+model Assinatura {
+  id              String           @id @default(uuid())
+  usuario_id      String
+  status          StatusAssinatura @default(ativa)
+  data_inicio     DateTime         @default(now())
+  data_expiracao  DateTime
+  valor_mensal    Float            @default(49.90)
+  forma_pagamento String           @default("simulada_cartao")
+
+  usuario         Usuario          @relation(fields: [usuario_id], references: [id], onDelete: Cascade)
+
+  @@map("assinaturas")
+}
+
+model Loja {
+  id                  String    @id @default(uuid())
+  vendedor_id         String
+  nome_loja           String
+  endereco_completo   String?
+  cidade              String
+  estado              String
+  cep                 String?
+  telefone_contato    String?
+  whatsapp            String?
+  email_contato       String?
+  site_redes_sociais  String?
+  criado_em           DateTime  @default(now())
+
+  vendedor            Usuario   @relation(fields: [vendedor_id], references: [id], onDelete: Cascade)
+  produtos            Produto[]
+
+  @@map("lojas")
+}
+
+model Produto {
+  id                 String        @id @default(uuid())
+  loja_id            String
+  titulo             String
+  preco              Float
+  quantidade_minima  Int           @default(6)
+  categoria          String
+  cores              Json          // array de cores [{name: string, hex?: string}] ou string[]
+  tamanhos           Json          // array de tamanhos ["P", "M", "G", etc]
+  ativo              Boolean       @default(true)
+  criado_em          DateTime      @default(now())
+  atualizado_em      DateTime      @updatedAt
+
+  loja               Loja          @relation(fields: [loja_id], references: [id], onDelete: Cascade)
+  fotos              FotoProduto[]
+
+  @@map("produtos")
+}
+
+model FotoProduto {
+  id          String   @id @default(uuid())
+  produto_id  String
+  url_imagem  String
+  ordem       Int      @default(0)
+  criado_em   DateTime @default(now())
+
+  produto     Produto  @relation(fields: [produto_id], references: [id], onDelete: Cascade)
+
+  @@map("fotos_produto")
+}
+
+model EnderecoComprador {
+  id          String   @id @default(uuid())
+  usuario_id  String
+  logradouro  String
+  numero      String?
+  bairro      String?
+  cidade      String
+  estado      String
+  cep         String
+  principal   Boolean  @default(true)
+  criado_em   DateTime @default(now())
+
+  usuario     Usuario  @relation(fields: [usuario_id], references: [id], onDelete: Cascade)
+
+  @@map("enderecos_comprador")
+}
